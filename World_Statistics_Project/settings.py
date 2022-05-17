@@ -10,7 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+from email.policy import default
 from pathlib import Path
+from decouple import config
+from dj_database_url import parse as dburl
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -26,7 +29,7 @@ SECRET_KEY = 'django-insecure-bwg%3ns^4x8i5lwt#pz@15e^tbxv%77$(dc98(jk0s0!%&9!)#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -75,12 +78,11 @@ WSGI_APPLICATION = 'World_Statistics_Project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+default_dburl = 'sqlite:///' + str(BASE_DIR / 'db.sqlite3')
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    'default': config('DATABASE_URL', default=default_dburl, cast=dburl),
     }
-}
 
 
 # Password validation
@@ -120,11 +122,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = str(BASE_DIR / 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-STATIC_URL = '/static'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+#STATIC_URL = '/static'
+#STATIC_ROOT = os.path.join(BASE_DIR, 'static')
